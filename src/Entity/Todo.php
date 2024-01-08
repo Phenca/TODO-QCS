@@ -20,6 +20,9 @@ class Todo
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[ORM\Column]
+    private ?bool $done = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +48,18 @@ class Todo
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function isDone(): ?bool
+    {
+        return $this->done;
+    }
+
+    public function setDone(bool $done): static
+    {
+        $this->done = $done;
 
         return $this;
     }
