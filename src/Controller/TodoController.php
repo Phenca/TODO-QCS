@@ -15,11 +15,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class TodoController extends AbstractController
 {
     #[Route('/', name: 'app_todo_index', methods: ['GET'])]
-    public function index(TodoRepository $todoRepository): Response
+    public function index(TodoRepository $todoRepository, Request $request): Response
     {
-        return $this->render('todo/index.html.twig', [
-            'todos' => $todoRepository->findAllOrdered('ASC'),
-        ]);
+        $orderby = $request->query->get('orderby')??'id';
+        $order = $request->query->get('order')??'ASC';
+        if($order == 'ASC'){ 
+            return $this->render('todo/index.html.twig', [
+                'todos' => $todoRepository->findAllOrdered($order, $orderby),
+                'order' => 'DESC',
+            ]);
+         } else{ 
+            return $this->render('todo/index.html.twig', [
+                'todos' => $todoRepository->findAllOrdered($order, $orderby),
+                'order' => 'ASC',
+            ]);
+        }
     }
 
     #[Route('/new', name: 'app_todo_new', methods: ['GET', 'POST'])]
