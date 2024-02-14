@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Todo;
+use App\Form\DoneType;
 use App\Form\TodoType;
 use App\Repository\TodoRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,20 +15,42 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/todo')]
 class TodoController extends AbstractController
 {
-    #[Route('/', name: 'app_todo_index', methods: ['GET'])]
+    #[Route('/', name: 'app_todo_index', methods: ['GET', 'POST'])]
     public function index(TodoRepository $todoRepository, Request $request): Response
     {
         $orderby = $request->query->get('orderby')??'id';
         $order = $request->query->get('order')??'ASC';
-        if($order == 'ASC'){ 
+        $filterform = $this->createForm(DoneType::class);
+        $filterform->handleRequest($request);
+        $criteria = [];
+
+       if ($filterform->isSubmitted() && $filterform->isValid()) {
+
+            $stillTodo = $filterform->get('todo')->getData();
+            if ($stillTodo) {
+                $criteria = [
+                    'isDone' => false,
+                ];
+            }
+            
+        }         
+
+        
+        //$todos = $todoRepository->findBy($criteria);
+
+        if($order == 'ASC'){
             return $this->render('todo/index.html.twig', [
-                'todos' => $todoRepository->findAllOrdered($order, $orderby),
+                'todos' => $todoRepository->findAllOrdered($order, $orderby, $criteria),
+                // 'todos' => $todos,
                 'order' => 'DESC',
+                'form' => $filterform->createView(),
             ]);
          } else{ 
             return $this->render('todo/index.html.twig', [
-                'todos' => $todoRepository->findAllOrdered($order, $orderby),
+                'todos' => $todoRepository->findAllOrdered($order, $orderby, $criteria),
+                //'todos' => $todos,
                 'order' => 'ASC',
+                'form' => $filterform->createView(),
             ]);
         }
     }

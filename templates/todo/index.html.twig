@@ -4,7 +4,10 @@
 
 {% block body %}
     <h1>Todo index</h1>
-
+    {{ form_start(form) }}
+        {{ form_row(form.todo) }}
+            <button class="btn">{{ button_label|default('Filtrer') }}</button>
+    {{ form_end(form) }}
     <table class="table">
         <thead>
             <tr>
@@ -24,6 +27,7 @@
                 <td>{{ todo.id }}</td>
                 <td>{{ todo.name }}</td>
                 <td>{{ todo.description }}</td>
+                <td>{{ todo.isDone ? 'Yes' : 'No' }}</td>
                 <td>
                     <a href="{{ path('app_todo_show', {'id': todo.id}) }}">show</a>
                     <a href="{{ path('app_todo_edit', {'id': todo.id}) }}">edit</a>
