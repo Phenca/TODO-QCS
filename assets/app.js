@@ -7,4 +7,14 @@ import './bootstrap.js';
  */
 import './styles/app.css'
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉')
+
+const is_todo_done = document.querySelectorAll(".isDone")
+is_todo_done.forEach(todo => {
+    todo.addEventListener('click', function(){
+        console.log(todo.innerHTML)  
+        if (todo.innerHTML == "Yes"){ 
+            todo.innerHTML = "No"
+        } else { todo.innerHTML = "Yes" }
+    })
+});
+

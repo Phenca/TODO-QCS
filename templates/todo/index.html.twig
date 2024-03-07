@@ -27,7 +27,7 @@
                 <td>{{ todo.id }}</td>
                 <td>{{ todo.name }}</td>
                 <td>{{ todo.description }}</td>
-                <td>{{ todo.isDone ? 'Yes' : 'No' }}</td>
+                <td class="isDone">{{ todo.isDone ? 'Yes' : 'No' }}</td>
                 <td>
                     <a href="{{ path('app_todo_show', {'id': todo.id}) }}">show</a>
                     <a href="{{ path('app_todo_edit', {'id': todo.id}) }}">edit</a>
