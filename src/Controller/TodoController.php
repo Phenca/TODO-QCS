@@ -7,6 +7,7 @@ use App\Form\DoneType;
 use App\Form\TodoType;
 use App\Repository\TodoRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -101,6 +102,30 @@ class TodoController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}/change-status', name: 'app_todo_change_status', methods: ['GET', 'POST'])]
+    public function changeStatus(ManagerRegistry $doctrine, $id, EntityManagerInterface $entityManager): Response
+    {
+        $status = $doctrine->getRepository(Todo::class)->findOneBy(['id' => $id]);
+        if ($status->isDone() == 1){
+            $status->setDone(0);
+        } else { 
+            $status->setDone(1); 
+        }
+        $entityManager->persist($status);
+        $entityManager->flush();
+        return $this->json(['message' => "La valeur à bien été modifiée !"]);
+    }
+
+    #[Route('/search', name: 'app_todo_search_term', methods: ['GET', 'POST'])]
+    public function search_term(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $terms = $request->request->get('terms');
+        $query = $entityManager->createQuery('SELECT t FROM App\Entity\Todo t WHERE t.name LIKE :terms')
+            ->setParameter('terms', '%'.$terms.'%');
+        $search = $query->getResult();
+        return $this->json([$search]);
+    }
+
     #[Route('/{id}', name: 'app_todo_delete', methods: ['POST'])]
     public function delete(Request $request, Todo $todo, EntityManagerInterface $entityManager): Response
     {
@@ -111,4 +136,7 @@ class TodoController extends AbstractController
 
         return $this->redirectToRoute('app_todo_index', [], Response::HTTP_SEE_OTHER);
     }
+    
+
 }
+

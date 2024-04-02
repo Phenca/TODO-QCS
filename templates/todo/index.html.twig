@@ -4,9 +4,11 @@
 
 {% block body %}
     <h1>Todo index</h1>
+    <div>
+        Rechercher : <input id="recherche" type="search" placeholder="Rechercher..."/>
+    </div>
     {{ form_start(form) }}
         {{ form_row(form.todo) }}
-            <button class="btn">{{ button_label|default('Filtrer') }}</button>
     {{ form_end(form) }}
     <table class="table">
         <thead>
@@ -27,7 +29,7 @@
                 <td>{{ todo.id }}</td>
                 <td>{{ todo.name }}</td>
                 <td>{{ todo.description }}</td>
-                <td class="isDone">{{ todo.isDone ? 'Yes' : 'No' }}</td>
+                <td id={{ todo.id }} class="isDone">{{ todo.isDone ? 'Yes' : 'No' }}</td>
                 <td>
                     <a href="{{ path('app_todo_show', {'id': todo.id}) }}">show</a>
                     <a href="{{ path('app_todo_edit', {'id': todo.id}) }}">edit</a>
