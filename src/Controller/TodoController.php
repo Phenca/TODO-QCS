@@ -119,7 +119,7 @@ class TodoController extends AbstractController
     #[Route('/search', name: 'app_todo_search_term', methods: ['GET', 'POST'])]
     public function search_term(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $terms = $request->request->get('terms');
+        $terms = ($request->toArray())['terms'];
         $query = $entityManager->createQuery('SELECT t FROM App\Entity\Todo t WHERE t.name LIKE :terms')
             ->setParameter('terms', '%'.$terms.'%');
         $search = $query->getResult();
