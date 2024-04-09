@@ -55,6 +55,47 @@ search_bar.addEventListener('input', function(){
     .then(response => response.json())
     .then(response => {
         console.log(response)
+        const table = document.querySelector('table')
+        const tbody = document.querySelector('tbody')
+        tbody.remove()
+        const new_tbody = document.createElement('tbody')
+        response.forEach(todo => {
+            const tr = document.createElement('tr')
+            const tdId = document.createElement('td') 
+            const tdName = document.createElement('td')
+            const tdDescription = document.createElement('td')
+            const tdDone  = document.createElement('td')
+
+            const td_links = document.createElement('td')
+            const a_show = document.createElement('a')
+            const a_edit = document.createElement('a')
+
+            todo.forEach(t => {
+                tr.appendChild(tdId)
+                tdId.innerHTML = t.id
+
+                tr.appendChild(tdName)
+                tdName.innerHTML = t.name
+
+                
+                tr.appendChild(tdDescription)
+                tdDescription.innerHTML = t.description
+
+                tr.appendChild(tdDone)
+                tdDone.innerHTML = t.done
+
+                td_links.appendChild(a_show)
+                a_show.href = `/todo/${t.id}`
+                a_show.innerHTML = 'show'
+
+                td_links.appendChild(a_edit)
+                a_edit.href = `/todo/${t.id}/edit`
+                a_edit.innerHTML = 'edit'
+                tr.appendChild(td_links)
+            })
+            new_tbody.appendChild(tr)
+            table.appendChild(new_tbody)
+        })
     })
 }
 )
